@@ -8,9 +8,11 @@ services:
     links:
       - web
       - heroku
+      - ssh
     environment:
         # Set mapping ports
         WEB_PORTS: 80:80,800:80,8888:80
+        SSH_PORTS: 22:22
 
     # Keep keys in volumes
     volumes:
@@ -27,7 +29,12 @@ services:
     volumes:
         - ./:/opt
         - ./storage/logs:/root
-
+  ssh:
+    image: corbinu/ssh-server
+    ports:
+        - 22:22
+    volumes:
+        - ./webapp:/opt
 volumes:
     tor-keys:
         driver: local
