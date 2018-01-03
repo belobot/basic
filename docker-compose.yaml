@@ -1,0 +1,33 @@
+# docker version 2 example
+
+version: "2"
+
+services:
+  tor:
+    image: goldy/tor-hidden-service
+    links:
+      - web
+      - heroku
+    environment:
+        # Set mapping ports
+        WEB_PORTS: 80:80,800:80,8888:80
+
+    # Keep keys in volumes
+    volumes:
+      - ./storage/tor-keys:/var/lib/tor/hidden_service/
+
+  web:
+    image: shivergard/docker-webserver
+    ports:
+        - 80:80
+    volumes:
+        - ./webapp:/var/www
+  heroku:
+    image: shivergard/heroku
+    volumes:
+        - ./:/opt
+        - ./storage/logs:/root
+
+volumes:
+    tor-keys:
+        driver: local
